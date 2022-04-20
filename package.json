@@ -1,0 +1,16 @@
+{
+  "name": "long-covid-tracker",
+  "version": "1.0.0",
+  "description": "Following these instructions to get the heroku apps set up with the correct Config Vars and buildpacks: https://medium.com/@neilshweky/deploying-react-express-mongodb-in-the-same-directory-to-heroku-3a97127f8ce9",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client && npm start",
+    "backend": "cd server && nodemon server.js",
+    "dev": "concurrently \"npm run backend\" \"npm run client\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^7.1.0"
+  }
+}

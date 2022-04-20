@@ -13,24 +13,23 @@ let API_URL = Utils.API_URL
 
 class Home extends React.Component {
 
-
   constructor() {
     super()
-    this.state = { text: "", cards: [] }
+    this.state = { text: "", items: [] }
 
   }
 
   componentDidMount() {
-    fetch(`${API_URL}/getposts`)
+    fetch(`${API_URL}/getdata`)
       .then(res => res.json())
-      .then(posts => {
-        posts.forEach(post => this.addCard(post))
+      .then(dataItems => {
+        dataItems.forEach(item => this.addItem(item))
       })
   }
 
   onSubmit = e => {
     e.preventDefault()
-    fetch(`${API_URL}/newpost`, {
+    fetch(`${API_URL}/newdata`, {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -39,24 +38,24 @@ class Home extends React.Component {
       body: JSON.stringify({ text: this.state.text })
     })
       .then(res => res.json())
-      .then(post => {
-        this.addCard(post)
+      .then(data => {
+        this.addItem(data)
       })
   }
 
-  addCard = post => {
-    let card =
-      <Card className="mt-2" key={post.timestamp}>
+  addItem = data => {
+    let item =
+      <Card className="mt-2" key={data.date}>
         <Card.Body>
-          <Card.Title>{post.text}</Card.Title>
+          <Card.Title>{data.text}</Card.Title>
           <Card.Subtitle>
-            {(new Date(post.timestamp)).toString()}
+            {(new Date(data.date)).toString()}
           </Card.Subtitle>
         </Card.Body>
       </Card>
 
-    this.setState({ cards: [...this.state.cards, card] })
-    console.log(this.state.cards)
+    this.setState({ items: [...this.state.items, item] })
+    console.log(this.state.items)
   }
 
   render() {
@@ -68,7 +67,7 @@ class Home extends React.Component {
             type="text" placeholder="Search" className="mr-sm-2 input-large search-query" />
           <Button variant="outline-success" type="submit">Submit</Button>
         </Form>
-        {this.state.cards}
+        {this.state.items}
       </Container>
     )
   }

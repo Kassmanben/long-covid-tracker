@@ -10,8 +10,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get('/', (req, res) => res.send('Hello, World'))
-app.post('/newpost', routes.new_post)
-app.get('/getposts', routes.get_posts)
+app.post('/newdata', routes.new_data)
+app.get('/getdata', routes.get_data)
 
 
 const port = process.env.PORT || '8080';

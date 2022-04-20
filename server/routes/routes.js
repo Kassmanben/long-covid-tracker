@@ -1,22 +1,22 @@
 const db = require('../models/database.js');
 
-const new_post = (req, res) => {
+const new_data = (req, res) => {
   if (!req.body.text)
-    return res.status(400).send("You must include a post in the body");
+    return res.status(400).send("You must include a data in the body");
 
-  db.newPost(req.body.text)
+  db.newData(req.body.text)
     .then(result => res.status(200).send(result))
-    .catch(err => res.status(500).send("Could not create post " + err))
+    .catch(err => res.status(500).send("Could not create data " + err))
 }
 
-const get_posts = (req, res) => {
-  db.getPosts()
+const get_data = (req, res) => {
+  db.getData()
     .then(result => res.status(200).send(result))
-    .catch(err => res.status(500).send("Could not retrieve posts " + err))
+    .catch(err => res.status(500).send("Could not retrieve data " + err))
 }
 
 
 module.exports = {
-  new_post,
-  get_posts
+  new_data,
+  get_data
 }

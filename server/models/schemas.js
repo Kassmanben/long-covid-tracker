@@ -2,20 +2,21 @@ const mongoose = require('mongoose');
 
 
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost/nodeapp";
+const mongoOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
 mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGO_URI, mongoOptions)
   .then(() => console.log("Connected to mongo", MONGO_URI))
-  .catch(console.log);
-// mongoose.set('useFindAndModify', false);
+  .catch((e) => console.log(e));
 
 const { Schema } = mongoose;
 
-const Post = new Schema({
+const Data = new Schema({
   text: { type: String, required: true },
-  timestamp: Number, // a unix timestamp of the post time
+  date: { type: Date, default: Date.now() }
 })
 
-module.exports = { Post: mongoose.model('Post', Post) };
+module.exports = { Data: mongoose.model('Data', Data) };
