@@ -15,7 +15,8 @@ mongoose
 const { Schema } = mongoose;
 
 const Data = new Schema({
-  text: { type: String, required: true },
+  rank: { type: Number, required: true },
+  note: { type: String, required: false },
   date: { type: Date, default: Date.now() }
 })
 

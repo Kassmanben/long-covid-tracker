@@ -1,8 +1,9 @@
 const { Data } = require('./schemas.js');
 
-const newData = text => {
+const newData = (rank, note) => {
   const dataObject = {
-    text,
+    rank,
+    note
   }
   const data = new Data(dataObject)
   return data.save()
