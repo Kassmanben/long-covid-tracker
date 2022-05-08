@@ -49,6 +49,26 @@ mongod --dbpath=<PATH_TO_MONGO_DIR>
 // for example mongod --dbpath=/Users/ben/data/db
 ```
 
+# Editing local db for testing
+
+- Start mongodb locally.
+
+- In a separate tab, use the shell command `mongo`
+
+- Show all the data in a particular collection. `show databases` -> `use <collection_name>` -> `db.getCollectionNames()` -> `db.<collection_name>.find()`
+
+- Use regular mongo commands to read and write from the db.
+
+- To completely delete all the data in a collection, use `db.<collection_name>.remove({})`
+
+**NOTE:** If you are getting a "port is already in use" error, use
+
+```
+sudo lsof -iTCP -sTCP:LISTEN -n -P
+```
+
+to find the process using that port and kill it with `sudo kill <PIID>`
+
 # Boilerplate Info:
 
 #### Things to Replace for Custom Site:

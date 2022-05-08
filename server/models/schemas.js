@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+const mongoose = require("mongoose");
 
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost/nodeapp";
 const mongoOptions = {
@@ -14,10 +13,11 @@ mongoose
 
 const { Schema } = mongoose;
 
+// TODO: Date is being recorded as Unix Time 0, troubleshoot
 const Data = new Schema({
   rank: { type: Number, required: true },
   note: { type: String, required: false },
-  date: { type: Date, default: Date.now() }
-})
+  date: { type: Date, default: Date.now() },
+});
 
-module.exports = { Data: mongoose.model('Data', Data) };
+module.exports = { Data: mongoose.model("Data", Data) };
