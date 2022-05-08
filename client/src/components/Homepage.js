@@ -42,11 +42,15 @@ class Home extends React.Component {
 
   addItem = (data) => {
     let item = (
-      <Card className="mt-2" key={data.date}>
+      <Card className="mt-2" key={Math.random()}>
         <Card.Body>
-          <Card.Title>{new Date(data.rank).toString()}</Card.Title>
-          <Card.Subtitle>{data.rank}</Card.Subtitle>
-          {data.note && <Card.Subtitle>{data.note}</Card.Subtitle>}
+          {Object.keys(data).map((item, idx) => {
+            return (
+              <div key={idx}>
+                {JSON.stringify(item)} : {JSON.stringify(data[item])}
+              </div>
+            );
+          }, data)}
         </Card.Body>
       </Card>
     );
