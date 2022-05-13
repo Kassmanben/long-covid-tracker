@@ -1,6 +1,14 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Form, FormControl, Button, Card, Container } from "react-bootstrap";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
 
 import Utils from "../Utilities";
 let API_URL = Utils.API_URL;
@@ -8,14 +16,16 @@ let API_URL = Utils.API_URL;
 class Home extends React.Component {
   constructor() {
     super();
-    this.state = { rank: -1, note: "", items: [] };
+    this.state = { rank: -1, note: "", itemsDisplay: [], items: [] };
   }
 
   componentDidMount() {
     fetch(`${API_URL}/getdata`)
       .then((res) => res.json())
       .then((dataItems) => {
-        dataItems.forEach((item) => this.addItem(item));
+        dataItems.forEach((item) => {
+          this.addItem(item);
+        });
       });
   }
 
@@ -41,6 +51,17 @@ class Home extends React.Component {
   };
 
   addItem = (data) => {
+    var test = new Date(data.date);
+
+    var chartData = {
+      rank: data.rank,
+      note: data.note,
+      date: test.toLocaleDateString("en-US"),
+    };
+
+    this.setState({
+      items: [...this.state.items, chartData],
+    });
     let item = (
       <Card className="mt-2" key={Math.random()}>
         <Card.Body>
@@ -55,7 +76,7 @@ class Home extends React.Component {
       </Card>
     );
 
-    this.setState({ items: [...this.state.items, item] });
+    this.setState({ itemsDisplay: [...this.state.itemsDisplay, item] });
   };
 
   render() {
@@ -101,7 +122,14 @@ class Home extends React.Component {
             </Button>
           </Form.Group>
         </Form>
-        {this.state.items}
+        <LineChart width={400} height={400} data={this.state.items}>
+          <Line type="monotone" dataKey="rank" stroke="#8884d8" />
+          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+        </LineChart>
+        {this.state.itemsDisplay}
       </Container>
     );
   }
