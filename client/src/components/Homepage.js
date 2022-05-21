@@ -1,13 +1,15 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Form, FormControl, Button, Card, Container } from "react-bootstrap";
+import { Form, FormControl, Button, Container } from "react-bootstrap";
 import {
   LineChart,
+  Label,
   Line,
   CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
+  ResponsiveContainer,
 } from "recharts";
 
 import Utils from "../Utilities";
@@ -16,7 +18,7 @@ let API_URL = Utils.API_URL;
 class Home extends React.Component {
   constructor() {
     super();
-    this.state = { rank: -1, note: "", itemsDisplay: [], items: [] };
+    this.state = { rank: -1, note: "", items: [] };
   }
 
   componentDidMount() {
@@ -51,35 +53,34 @@ class Home extends React.Component {
   };
 
   addItem = (data) => {
-    var test = new Date(data.date);
+    var date = new Date(data.date);
 
     var chartData = {
       rank: data.rank,
       note: data.note,
-      date: test.toLocaleDateString("en-US"),
+      date: date.toLocaleDateString("en-US"),
     };
 
     this.setState({
       items: [...this.state.items, chartData],
     });
-    let item = (
-      <Card className="mt-2" key={Math.random()}>
-        <Card.Body>
-          {Object.keys(data).map((item, idx) => {
-            return (
-              <div key={idx}>
-                {JSON.stringify(item)} : {JSON.stringify(data[item])}
-              </div>
-            );
-          }, data)}
-        </Card.Body>
-      </Card>
-    );
-
-    this.setState({ itemsDisplay: [...this.state.itemsDisplay, item] });
   };
 
   render() {
+    //This is where you create content to go inside of the tooltip
+    const CustomTooltip = ({ active, payload, label }) => {
+      if (active && payload && payload.length) {
+        return (
+          <div className="custom-tooltip">
+            <p className="label">{`${label} : ${payload[0].value}`}</p>
+            <p className="desc">{payload[0].payload.note}</p>
+          </div>
+        );
+      }
+
+      return null;
+    };
+
     return (
       <Container>
         <Form onSubmit={this.onSubmit} inline="true">
@@ -122,14 +123,31 @@ class Home extends React.Component {
             </Button>
           </Form.Group>
         </Form>
-        <LineChart width={400} height={400} data={this.state.items}>
-          <Line type="monotone" dataKey="rank" stroke="#8884d8" />
-          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-        </LineChart>
-        {this.state.itemsDisplay}
+        <ResponsiveContainer width="95%" height={500}>
+          <LineChart margin={{ top: 60, bottom: 30 }} data={this.state.items}>
+            <Line type="monotone" dataKey="rank" stroke="#8884d8" />
+            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+            <XAxis dataKey="date">
+              <Label
+                value="Daily Rank"
+                offset={400}
+                position="top"
+                style={{ fontSize: "200%", fontWeight: "bold" }}
+              />
+
+              <Label value="Dates" offset={-20} position="insideBottom" />
+            </XAxis>
+            <YAxis>
+              <Label
+                angle={-90}
+                value="Rank"
+                offset={20}
+                position="insideLeft"
+              />
+            </YAxis>
+            <Tooltip content={<CustomTooltip />} />
+          </LineChart>
+        </ResponsiveContainer>
       </Container>
     );
   }
