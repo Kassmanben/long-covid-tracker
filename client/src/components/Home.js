@@ -1,77 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Form, FormControl, Button, Container } from "react-bootstrap";
-import {
-  LineChart,
-  Label,
-  Line,
-  CartesianGrid,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { Container } from "react-bootstrap";
+
+import axios from "axios";
 
 import Utils from "../Utilities";
 import Chart from "./chart/Chart";
-import CustomXAxis from "./chart/CustomXAxis";
-import CustomTooltip from "./chart/CustomTooltip";
 let API_URL = Utils.API_URL;
 
-class Home extends React.Component {
-  constructor() {
-    super();
-    this.state = { rank: -1, note: "", items: [] };
-  }
+function Home() {
+  const [rank, setRank] = useState(-1);
+  const [note, setNote] = useState("");
+  const [items, setItems] = useState([]);
 
-  componentDidMount() {
-    fetch(`${API_URL}/getdata`)
-      .then((res) => res.json())
-      .then((dataItems) => {
-        dataItems.forEach((item) => {
-          this.addItem(item);
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(`${API_URL}/getdata`)
+      const mappedData = result.data.map((dataItem) => {
+        return ({
+          ...dataItem,
+          id: dataItem._id,
+          date: new Date(dataItem.date).toLocaleDateString()
         });
-      });
-  }
-
-  onSubmit = (e) => {
-    e.preventDefault();
-    var dataToPost = {
-      ...(this.state.rank > -1 && { rank: this.state.rank }),
-      ...(this.state.note !== "" && { note: this.state.note }),
+      })
+      setItems(mappedData);
     };
 
-    fetch(`${API_URL}/newdata`, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(dataToPost),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        this.addItem(data);
-      });
-  };
+    fetchData();
+  }, []);
 
-  addItem = (data) => {
-    var date = new Date(data.date);
+  // onSubmit = (e) => {
+  //   e.preventDefault();
+  //   var dataToPost = {
+  //     ...(this.state.rank > -1 && { rank: this.state.rank }),
+  //     ...(this.state.note !== "" && { note: this.state.note }),
+  //   };
 
-    var chartData = {
-      rank: data.rank,
-      note: data.note,
-      date: date.toLocaleDateString("en-US"),
-    };
+  //   fetch(`${API_URL}/newdata`, {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //     },
+  //     method: "POST",
+  //     body: JSON.stringify(dataToPost),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       this.addItem(data);
+  //     });
+  // };
 
-    this.setState({
-      items: [...this.state.items, chartData],
-    });
-  };
-
-  render() {
-    return (
-      <Container>
-        <Form onSubmit={this.onSubmit} inline="true">
+  return (
+    <Container>
+      {/* <Form onSubmit={this.onSubmit} inline="true">
           <Form.Group controlId="rankSelect">
             <Form.Label>Rank how you are feeling today from 0-10</Form.Label>
             <Form.Control
@@ -110,31 +91,10 @@ class Home extends React.Component {
               Submit
             </Button>
           </Form.Group>
-        </Form>
-        <ResponsiveContainer width="95%" height={500}>
-          <LineChart margin={{ top: 60, bottom: 30 }} data={this.state.items}>
-            <Line type="monotone" dataKey="rank" stroke="#8884d8" />
-            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-            <CustomXAxis
-              dataKey="date"
-              chartTitle="Daily Rank"
-              xAxisTitle="Date"
-            />
-            <YAxis>
-              <Label
-                angle={-90}
-                value="Rank"
-                offset={20}
-                position="insideLeft"
-              />
-            </YAxis>
-            <Tooltip content={<CustomTooltip />} />
-          </LineChart>
-        </ResponsiveContainer>
-        <Chart items={this.state.items} />
-      </Container>
-    );
-  }
+        </Form> */}
+      <Chart items={items} />
+    </Container>
+  );
 }
 
 export default Home;
