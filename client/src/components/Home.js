@@ -6,13 +6,15 @@ import {
   Label,
   Line,
   CartesianGrid,
-  XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
 
 import Utils from "../Utilities";
+import Chart from "./chart/Chart";
+import CustomXAxis from "./chart/CustomXAxis";
+import CustomTooltip from "./chart/CustomTooltip";
 let API_URL = Utils.API_URL;
 
 class Home extends React.Component {
@@ -67,20 +69,6 @@ class Home extends React.Component {
   };
 
   render() {
-    //This is where you create content to go inside of the tooltip
-    const CustomTooltip = ({ active, payload, label }) => {
-      if (active && payload && payload.length) {
-        return (
-          <div className="custom-tooltip">
-            <p className="label">{`${label} : ${payload[0].value}`}</p>
-            <p className="desc">{payload[0].payload.note}</p>
-          </div>
-        );
-      }
-
-      return null;
-    };
-
     return (
       <Container>
         <Form onSubmit={this.onSubmit} inline="true">
@@ -127,16 +115,11 @@ class Home extends React.Component {
           <LineChart margin={{ top: 60, bottom: 30 }} data={this.state.items}>
             <Line type="monotone" dataKey="rank" stroke="#8884d8" />
             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-            <XAxis dataKey="date">
-              <Label
-                value="Daily Rank"
-                offset={400}
-                position="top"
-                style={{ fontSize: "200%", fontWeight: "bold" }}
-              />
-
-              <Label value="Dates" offset={-20} position="insideBottom" />
-            </XAxis>
+            <CustomXAxis
+              dataKey="date"
+              chartTitle="Daily Rank"
+              xAxisTitle="Date"
+            />
             <YAxis>
               <Label
                 angle={-90}
@@ -148,6 +131,7 @@ class Home extends React.Component {
             <Tooltip content={<CustomTooltip />} />
           </LineChart>
         </ResponsiveContainer>
+        <Chart items={this.state.items} />
       </Container>
     );
   }
