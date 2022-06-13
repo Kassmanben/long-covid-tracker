@@ -5,7 +5,7 @@ import {Button, Container, Form, FormControl} from "react-bootstrap";
 import axios from "axios";
 
 import Chart from "./chart/Chart";
-import {dbDataToChartItem} from "../utils/dataUtils";
+import {dBDataToChartItems} from "../utils/dbUtils";
 import {axiosConfig, GET_DATA, POST_DATA} from "../config/apiConfig";
 
 function Home() {
@@ -16,29 +16,29 @@ function Home() {
     useEffect(() => {
         const fetchData = async () => {
             await axios.get(GET_DATA).then((res) => {
-                setItems(res.data.map((dataItem) => {
-                    return dbDataToChartItem(dataItem)
-                }));
+                setItems(dBDataToChartItems(res.data));
             }).catch((err) => {
-                console.log("AXIOS ERROR: ", err);
+                console.log("Error getting data: ", err);
             })
         };
 
-        fetchData();
+        fetchData().catch((err) => {
+            console.log("Error getting data: ", err);
+        })
     }, []);
 
     const onSubmit = (e) => {
         e.preventDefault();
-        var postData = {
+        const postData = {
             ...(rank > -1 && {rank}),
             ...(note !== "" && {note}),
         };
 
         axios.post(POST_DATA, postData, axiosConfig)
             .then((res) => {
-                setItems([...items, dbDataToChartItem(res.data)]);
+                setItems(dBDataToChartItems([...items, res.data]));
             }).catch((err) => {
-            console.log("AXIOS ERROR: ", err);
+            console.log("Error posting data: ", err);
         })
     };
 
