@@ -6,15 +6,18 @@ const cors = require('cors');
 
 app.use(cors());
 app.use(morgan('tiny'))
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 app.get('/', (req, res) => res.send('Hello, World'))
-app.post('/newdata', routes.new_data)
-app.get('/getdata', routes.get_data)
+app.post('/newrank', routes.new_rank)
+app.get('/getrank', routes.get_rank)
+
+app.post('/newactivity', routes.new_activity)
+app.get('/getactivity', routes.get_activity)
 
 
 const port = process.env.PORT || '8080';
 app.listen(port, () => {
-  console.log('Server running on port ' + port + '. Now open http://localhost:' + port + '/ in your browser!');
+    console.log('Server running on port ' + port + '. Now open http://localhost:' + port + '/ in your browser!');
 });

@@ -1,17 +1,30 @@
-const { Data } = require('./schemas.js');
+const {Rank, Activity} = require('./schemas.js');
 
-const newData = (rank, note) => {
-  const dataObject = {
-    rank,
-    note
-  }
-  const data = new Data(dataObject)
-  return data.save()
+const newRank = (rank, note) => {
+    const rankToSave = {
+        rank,
+        note
+    }
+    const rankObj = new Rank(rankToSave)
+    return rankObj.save()
 }
 
-const getData = () => {
-  return Data.find()
+const getRank = () => {
+    return Rank.find()
+}
+
+const newActivity = (name, timeAllotted) => {
+    const activityToSave = {
+        name,
+        timeAllotted
+    }
+    const activityObj = new Activity(activityToSave)
+    return activityObj.save()
+}
+
+const getActivity = () => {
+    return Activity.find()
 }
 
 
-module.exports = { newData, getData }
+module.exports = {newRank: newRank, getRank: getRank, newActivity: newActivity, getActivity: getActivity}
