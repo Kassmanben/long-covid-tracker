@@ -21,8 +21,12 @@ const Rank = new Schema({
 
 const Activity = new Schema({
     name: {type: String, required: true},
-    timeAllotted: {type: Number, required: true},
-    date: {type: Date, default: Date.now()},
+    timesAllotted: {
+        type: [{
+            time: {type: Number, required: true},
+            date: {type: Date, required: true}
+        }]
+    },
 });
 
 module.exports = {

@@ -5,13 +5,16 @@ import CustomTooltip from "./CustomTooltip";
 
 
 function Chart(props) {
-    const {items, dataKey, chartTitle, yAxisLabel} = props;
+    const {items, dataKeys, chartTitle, yAxisLabel} = props;
+
+    const lines = dataKeys.map(key => <Line type="monotone" dataKey={key} stroke="#8884d8"/>)
+    console.log(items)
 
     return (
         <ResponsiveContainer width="95%" height={500}>
             <LineChart margin={{top: 60, bottom: 30, left: 20}} data={items}>
-                <Line type="monotone" dataKey={dataKey} stroke="#8884d8"/>
                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
+                {lines}
                 <XAxis dataKey="date">
                     <Label
                         value={chartTitle}

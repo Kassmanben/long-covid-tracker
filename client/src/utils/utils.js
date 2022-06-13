@@ -14,8 +14,13 @@ export function mapActivityData(dataArray) {
     // Maps DB date to local time, filters null elements
     if (dataArray && dataArray.length > 0) {
         return dataArray.map((dataItem) => {
-            if (dataItem.name && dataItem.timeAllotted) {
-                return getDateLocalized(dataItem)
+            if (dataItem.name && dataItem.timesAllotted) {
+                return {
+                    name: dataItem.name,
+                    timesAllotted: dataItem.timesAllotted.map((t) => {
+                        return getDateLocalized(t)
+                    }).filter(item => item)
+                }
             }
             return null
         }).filter(item => item)
@@ -25,7 +30,6 @@ export function mapActivityData(dataArray) {
 function getDateLocalized(dataItem) {
     return ({
         ...dataItem,
-        id: dataItem._id,
         date: new Date(dataItem.date).toLocaleDateString()
     });
 }

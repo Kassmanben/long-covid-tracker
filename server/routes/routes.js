@@ -16,10 +16,10 @@ const get_rank = (req, res) => {
 }
 
 const new_activity = (req, res) => {
-    if (!req.body.name || !req.body.timeAllotted)
-        return res.status(400).send("You must include a name and timeAllotted in the body");
+    if (!req.body.name || !req.body.timesAllotted)
+        return res.status(400).send("You must include a name and timesAllotted in the body");
 
-    db.newActivity(req.body.name, req.body.timeAllotted)
+    db.newActivity(req.body.name, req.body.timesAllotted)
         .then(result => res.status(200).send(result))
         .catch(err => res.status(500).send("Could not create activity " + err))
 }

@@ -6,14 +6,19 @@ import {axiosConfig, GET_ACTIVITY_URL, POST_ACTIVITY_URL} from "../../config/api
 import {mapActivityData} from "../../utils/utils";
 
 function RankForm(props) {
-    const {activityChartItems, setActivityChartItems} = props
+    const {activityChartItems, setActivityChartItems, activityChartDataKeys, setActivityChartDataKeys} = props
 
     const [name, setName] = useState("");
     const [timeAllotted, setTimeAllotted] = useState(0);
+
     useEffect(() => {
         const fetchActivities = async () => {
             await axios.get(GET_ACTIVITY_URL).then((res) => {
-                setActivityChartItems(mapActivityData(res.data));
+                const mappedData = mapActivityData(res.data)
+                const dataKeys = mappedData.map(d => d.name)
+                console.log(dataKeys)
+                setActivityChartItems(mappedData);
+                setActivityChartDataKeys(dataKeys)
             }).catch((err) => {
                 console.log("Error getting data: ", err);
             })
@@ -27,17 +32,26 @@ function RankForm(props) {
 
     const onActivityFormSubmit = (e) => {
         e.preventDefault();
-        const postData = {
-            ...(name !== "" && {name}),
-            ...(timeAllotted > 0 && {timeAllotted}),
-        };
+        if (name !== "" && timeAllotted > 0) {
+            const postData = {
+                name,
+                timesAllotted: [{
+                    time: timeAllotted,
+                    date: Date.now()
+                }]
+            };
 
-        axios.post(POST_ACTIVITY_URL, postData, axiosConfig)
-            .then((res) => {
-                setActivityChartItems(mapActivityData([...activityChartItems, res.data]));
-            }).catch((err) => {
-            console.log("Error posting data: ", err);
-        })
+            axios.post(POST_ACTIVITY_URL, postData, axiosConfig)
+                .then((res) => {
+                    const mappedData = mapActivityData([...activityChartItems, res.data])
+                    const dataKeys = mappedData.map(d => d.name)
+                    setActivityChartItems(mappedData);
+                    setActivityChartDataKeys(dataKeys)
+                }).catch((err) => {
+                console.log("Error posting data: ", err);
+            })
+        }
+
     };
 
     return (
