@@ -3,10 +3,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import {Button, Form, FormControl} from "react-bootstrap";
 import axios from "axios";
 import {axiosConfig, GET_ACTIVITY_URL, POST_ACTIVITY_URL} from "../../config/apiConfig";
-import {mapActivityData} from "../../utils/utils";
+import {combineNewActivityData, mapActivityData} from "../../utils/utils";
 
 function RankForm(props) {
-    const {activityChartItems, setActivityChartItems, activityChartDataKeys, setActivityChartDataKeys} = props
+    const {activityChartItems, setActivityChartItems} = props
 
     const [name, setName] = useState("");
     const [timeAllotted, setTimeAllotted] = useState(0);
@@ -15,10 +15,7 @@ function RankForm(props) {
         const fetchActivities = async () => {
             await axios.get(GET_ACTIVITY_URL).then((res) => {
                 const mappedData = mapActivityData(res.data)
-                const dataKeys = mappedData.map(d => d.name)
-                console.log(dataKeys)
                 setActivityChartItems(mappedData);
-                setActivityChartDataKeys(dataKeys)
             }).catch((err) => {
                 console.log("Error getting data: ", err);
             })
@@ -43,10 +40,8 @@ function RankForm(props) {
 
             axios.post(POST_ACTIVITY_URL, postData, axiosConfig)
                 .then((res) => {
-                    const mappedData = mapActivityData([...activityChartItems, res.data])
-                    const dataKeys = mappedData.map(d => d.name)
+                    const mappedData = combineNewActivityData(res.data, activityChartItems)
                     setActivityChartItems(mappedData);
-                    setActivityChartDataKeys(dataKeys)
                 }).catch((err) => {
                 console.log("Error posting data: ", err);
             })

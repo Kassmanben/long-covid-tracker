@@ -7,8 +7,7 @@ import CustomTooltip from "./CustomTooltip";
 function Chart(props) {
     const {items, dataKeys, chartTitle, yAxisLabel} = props;
 
-    const lines = dataKeys.map(key => <Line type="monotone" dataKey={key} stroke="#8884d8"/>)
-    console.log(items)
+    const lines = dataKeys.map(key => <Line type="monotone" key={key} dataKey={key} stroke="#8884d8"/>)
 
     return (
         <ResponsiveContainer width="95%" height={500}>
