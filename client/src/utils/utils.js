@@ -25,7 +25,7 @@ export function mapActivityData(dataArray) {
 }
 
 export function combineNewActivityData(newData, existingActivityData) {
-    var mappedActivitiesByDate = existingActivityData
+    let mappedActivitiesByDate = existingActivityData
 
     if (newData.timesAllotted && newData.timesAllotted.length > 0) {
         newData.timesAllotted.forEach((timeItem) => {
